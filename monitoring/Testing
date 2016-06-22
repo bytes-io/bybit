@@ -1,0 +1,23 @@
+Testing the hotspot:
+
+# Client:
+ping 217.70.184.38
+
+# IISP, term 1
+create_ap wlan0 wlan1 MyAccessPoint1
+
+# IISP, term 2
+./iptcontrol.sh 1
+./iptcontrol.sh 2
+./iptcontrol.sh 3
+./iptcontrol.sh 4
+./iptcontrol.sh 5
+
+# IISP, term 1
+# ctrl+C
+iptables -F
+create_ap wlan0 wlan1 MyAccessPoint1
+
+# IISP, term 2 
+control.sh 2000
+

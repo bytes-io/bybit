@@ -35,5 +35,11 @@ while [ 1 = 1 ]; do
 
 	sleep 0.000005    # measurement intervals
 done
+how to know size ofa linux package
 
-
+#set Counters
+#iptables -A FORWARD -o $EXT_IF -d $IPClient
+#iptables -A FORWARD -i $EXT_IF -d $IPClient
+#check Counters (need to parse)
+#iptables -L -v
+#watch --interval 0 'iptables -nvL | grep -v "0     0"'

@@ -17,6 +17,7 @@ MAC_CLIENT=ac:bc:32:a5:3e:ed
 if [ $1 = 1 ]; then
 	echo "Task 1 - Deny FORWARD by default"
 	iptables -I FORWARD 1 -i $INT_IF -o $EXT_IF -j DROP # is the 'EXT_IF' necessary?
+#	iptables -I FORWARD 1 -i $INT_IF -j DROP # is the 'EXT_IF'
 fi
 
 if [ $1 = 2 ]; then
@@ -33,10 +34,10 @@ fi
 if [ $1 = 4 ]; then
 	echo "Task 4 -Allow client to connect (authentified by MAC address)"
 	iptables -t nat -I PREROUTING -m mac --mac-source $MAC_CLIENT -j ACCEPT
-	iptables -I FORWARD 2 -m mac --mac-source $MAC_CLIENT -j ACCEPT
+	iptables -I FORWARD 1 -m mac --mac-source $MAC_CLIENT -j ACCEPT
 fi
 
 if [ $1 = 5 ]; then
 	echo "Task 5 -DISallow client to connect (authentified by MAC address)"
-	iptables -D FORWARD 2
+	iptables -D FORWARD 1
 fi
