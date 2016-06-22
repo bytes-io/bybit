@@ -7,7 +7,9 @@
 
 # Depencies: none 
 
-INT_IF=wlan0
+INT_IF=ap0      
+#INT_IF=wlan0 
+#INT_IF=mon.ap0 
 EXT_IF=wlan1
 IS_ALWD=217.70.184.38
 MAC_CLIENT=ac:bc:32:a5:3e:ed

@@ -8,25 +8,22 @@
 
 # Dependencies:
 # This script uses iptcontrol.sh. 
+# can deal several mac addresses using listReader.sh
 
-TX1=/sys/class/net/wlan1/statistics/tx_bytes
-TX0=/sys/class/net/wlan0/statistics/tx_bytes
+#TX0=/sys/class/net/wlan0/statistics/tx_bytes
+TX0= /sys/class/net/ap0/statistics/tx_bytes
 
 initTX0=`cat $TX0`
-initTX1=`cat $TX1`
-	
-./iptcontrol.sh 4
+ 	
+./iptcontrol.sh 4 
 
 while [ 1 = 1 ]; do
-	echo "WLAN0 (client's consumption):"
+# approach 1 - check consumption PER INTERFACE
+	echo "WLAN0/AP0 (client's consumption):"
 	currentTX0=`cat $TX0`
 	let "diffTX0 = currentTX0 - initTX0"
 	echo $diffTX0	
 
-#	echo "WLAN1 (client + iisp):"
-#	currentRX1=`cat $RX1`
-#	let "diffRX1 = currentRX1 - initRX1"
-#	echo $diffRX1
 	echo "*****************************"
 
 	if [ $diffTX0 -ge $1 ]; then
