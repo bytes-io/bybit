@@ -11,7 +11,7 @@
 # can deal several mac addresses using listReader.sh
 
 #TX0=/sys/class/net/wlan0/statistics/tx_bytes
-TX0= /sys/class/net/ap0/statistics/tx_bytes
+TX0=/sys/class/net/ap0/statistics/tx_bytes
 
 initTX0=`cat $TX0`
  	
@@ -35,7 +35,6 @@ while [ 1 = 1 ]; do
 
 	sleep 0.000005    # measurement intervals
 done
-how to know size ofa linux package
 
 #set Counters
 #iptables -A FORWARD -o $EXT_IF -d $IPClient
