@@ -33,7 +33,7 @@ while [ 1 = 1 ]; do
 		break		
 	fi
 
-	sleep 0.000005    # measurement intervals
+	sleep 0.05    # measurement intervals
 done
 
 #set Counters

@@ -1,3 +1,8 @@
+
+At the moment, case 4 of iptcontrol seems half deficient: pings work, but regular websurfing does not work. Alternative rule, as in LAG, is:
+iptables -A PREROUTING -i ap0 -m mac --mac-source !$MAC_ALWD -j DROP
+
+
 Testing the hotspot:
 
 # Client:
