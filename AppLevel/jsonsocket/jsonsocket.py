@@ -17,7 +17,7 @@ class Server(object):
   client = None
 
   def __init__(self, host, port):
-    self.socket = socket.socket()
+    self.socket = socket.socket()    # by default AF_INET SOCK_STREAM
     self.socket.bind((host, port))
     self.socket.listen(self.backlog)
 
@@ -25,7 +25,7 @@ class Server(object):
     self.close()
 
   def accept(self):
-    # if a client is already connected, disconnect it
+    # if a client is already connected, disconnect it  <<<???
     if self.client:
       self.client.close()
     self.client, self.client_addr = self.socket.accept()

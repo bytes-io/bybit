@@ -1,3 +1,13 @@
+I found jsonsocket at https://github.com/mdebbar/jsonsocket.
+
+Alternative implementation of JSON over TCP would be:
+https://cpiekarski.com/2011/05/09/super-easy-python-json-client-server/
+
+Problem with the projects outlined above: multithreading implies we are back to
+plain sockets. A probable to do will be: design separate that takes socket as 
+constructor argument but embeds send/rcvs into json optimized structures. 
+
+
 jsonsocket
 ==========
 
