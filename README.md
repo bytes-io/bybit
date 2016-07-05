@@ -10,5 +10,5 @@ COMMUNICATION SERVER / CLIENT:
 TRANSACTION SERVER: 
 uses pybitcointools on both sides for now. 
 
-ANDROID DEV: very early stage.It is safe to ignore this atm.  
+ANDROID DEV: is in ByBit1. Very early stage.Please ignore it for now.  
 
