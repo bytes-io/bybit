@@ -22,7 +22,7 @@ class connManager(Thread):
 		self.balance = 0
 		self.usage = 0
 		self.ipClient = info
-		self.privS ='KxF9VktMWSdZV72ZMaB4bQM3D25bGEinwqrwW8t2kh73MnJZ2ajp'
+		self.privS =' '
 		self.lastpayment = None
 		self.lastsig = None
 		self.pubKeyClient = None

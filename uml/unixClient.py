@@ -41,13 +41,8 @@ if __name__ == "__main__":
 		host = '192.168.12.1'
 
 	# private key of client
-	rKeyClient = 'L4hhTgFtTkLc5rWW7M2iHb1J6nc9o5bNw3vhuyxWNzpKLqTUkhdC'  # 13qXskKGjvi72XarTJihVBF7gVomcUMGmw
-
-	# KwPevsRA5dF2zJZv7asXbjdCGmguuGDbbnh3nibvHxvgw1EuH3dV # 1hJgch5ExiWVqf9HH5JhwoGWCUjR9Zo5A
-	# L1fae29oLrvgDqUcYhtKHZcBqVyQeEytMKGxXxhHwfASSR1jutkM # 12YoeoUMbW9TMqe1PLQL2oHFzQAHSMGb7c
-	# L2KKKBcaEsBGJkeaEqHRD4aqpoXtR2TXNtWHU1BUjGVo154Eu9NF  # 1QKb78KGXGivbgMXJbVmUz6Tp9w6BAtYve
-	#
-
+	rKeyClient = ' '  # 13qXskKGjvi72XarTJihVBF7gVomcUMGmw
+ 
 	# connect
 	conn = JsonConn()
 	conn.connect(('',7878))
