@@ -20,11 +20,12 @@ def paymentSpin(redeemScript, conn, privkeyC, pubkeyS, increment):
 		amount += increment
 		i+=1
 		# make a payment transaction with amount += increment
-		Ptx = makePtx(redeemScript, privtopub(privkeyC), pubkeyS, amount)
+		#Ptx = makePtx(redeemScript, privtopub(privkeyC), pubkeyS, amount)
 		# partially sign it
-		#clientSig = bitcoin.multisign(Ptx, 0, redeemScript, privkeyC)
-		clientSig = 'clientSigin pspin'
+		#clientSig = multisign(Ptx, 0, redeemScript, privkeyC)
 		# send Ptx
+		Ptx = 'inspinPtx'
+		clientsig = 'inspinClientSig'
 		conn.jsend(Ptx)
 		# send client signature
 		conn.jsend(clientSig)
@@ -41,8 +42,8 @@ if __name__ == "__main__":
 		host = '192.168.12.1'
 
 	# private key of client
-	rKeyClient = ' '  # 13qXskKGjvi72XarTJihVBF7gVomcUMGmw
- 
+	rKeyClient = 'L1Gxw9jdwGh2pow9H5hjhtMyiLK5o6mEdtGsrstMRtgp8gpvpzNy'  # 13qXskKGjvi72XarTJihVBF7gVomcUMGmw
+
 	# connect
 	conn = JsonConn()
 	conn.connect(('',7878))
@@ -58,7 +59,7 @@ if __name__ == "__main__":
 	print DtxS
 	conn.jsend(DtxS) #
 	conn.jsend(script)#
-	sleep(4)
+	sleep(3)
 	# book keeping
  	scriptAddr = scriptaddr(script)
 	print("What remains in original address:")

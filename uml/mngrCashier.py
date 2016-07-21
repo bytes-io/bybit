@@ -22,7 +22,7 @@ class connManager(Thread):
 		self.balance = 0
 		self.usage = 0
 		self.ipClient = info
-		self.privS =' '
+		self.privS ='KyEEnNgSwuBK3PwqAdsRMrPqhQ5xsm4WBgb7KFiAM7DYxaGsntq3' #12hT3am3MbDXP9wbQypToSgwFoeG3qtXeU
 		self.lastpayment = None
 		self.lastsig = None
 		self.pubKeyClient = None
@@ -77,7 +77,7 @@ class connManager(Thread):
 		print own
 		self.c.close()
 		# broadcast D
-		bitcoin.pushtx(signedDtx)
+		#bitcoin.pushtx(signedDtx)
 		print '############################### MPC initialised ################################'
 		self.balance += 1000000
 
@@ -94,7 +94,7 @@ class connManager(Thread):
 
 		# broadcast payment
 		print 'Manager broadcasts payment'
-		self.pushPayment()
+		#self.pushPayment()
 
 		# terminate cashier
 		print "Manager waiting for cashier's termination"
