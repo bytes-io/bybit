@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
 	# connect
 	conn = JsonConn()
-	conn.connect(('',7879))
+	conn.connect((host,7879))
 
 	# HANDSHAKE
 	uKeyServer = exchangePubKey(privtopub(rKeyClient), conn)
