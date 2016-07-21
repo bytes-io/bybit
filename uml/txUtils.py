@@ -92,14 +92,19 @@ def signAllIns(aTx, priv, nbIns=None):
 # amount arg4 to arg2 and the rest, minus a fee, to arg3.
 # Returns tx
 
-def makePtx(script, uKeyClient, uKeyServer, toServer):
+def makePtx(uKeyClient, uKeyServer, toServer):
+	script = mk_multisig_script(uKeyClient,uKeyServer,2,2)
 	addrServer = pubtoaddr(uKeyServer)
 	addrClient = pubtoaddr(uKeyClient)
 	outs = [{'value':toServer, 'address':addrServer}]
-	histScript = history(scriptaddr(script))
+	histScript = unspent(scriptaddr(script))
 	tx = mksend(histScript, outs, addrClient, feeCalculator(histScript))
 	return tx
 
+def signAndCombine(aPtx, uKeyClient, sigClient, rKeyServer):
+	script = mk_multisig_script(uKeyClient, privtopub(rKeyServer), 2, 2)
+	sigServer = multisign(aPtx, 0, script, rKeyServer)
+	return apply_multisignatures(aPtx, 0, script, [sigClient, sigServer])
 
 # DEPOSIT
 
@@ -159,7 +164,7 @@ def balanceAddr(address):
 def feeCalculator(ins, urgent=0):
 	if urgent==1:
 		return 40000
-	return 14000
+	return 13000
 	# get size in bytes
 	# multiply this by current price per byte from https://bitcoinfees.21.co/#delay corresponding to the level of urgency. use curl here. Firewall should allow it.
 	# instead of multoplying (this multiplicative perhaps does not reflect the mining market works), estimate function
