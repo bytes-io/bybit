@@ -20,19 +20,17 @@ def paymentSpin(redeemScript, conn, privkeyC, pubkeyS, increment):
 		amount += increment
 		i+=1
 		# make a payment transaction with amount += increment
-		#Ptx = makePtx(redeemScript, privtopub(privkeyC), pubkeyS, amount)
+		Ptx = makePtx(privtopub(privkeyC), pubkeyS, amount)
 		# partially sign it
-		#clientSig = multisign(Ptx, 0, redeemScript, privkeyC)
+		clientSig = multisign(Ptx, 0, redeemScript, privkeyC)
 		# send Ptx
-		Ptx = 'inspinPtx'
-		clientsig = 'inspinClientSig'
 		conn.jsend(Ptx)
 		# send client signature
+		sleep(.2)
 		conn.jsend(clientSig)
 		sleep(2)
 	print 'Total spent this time: %d' %amount
 	return amount
-
 
 # Test
 if __name__ == "__main__":
@@ -42,11 +40,11 @@ if __name__ == "__main__":
 		host = '192.168.12.1'
 
 	# private key of client
-	rKeyClient = 'L1Gxw9jdwGh2pow9H5hjhtMyiLK5o6mEdtGsrstMRtgp8gpvpzNy'  # 13qXskKGjvi72XarTJihVBF7gVomcUMGmw
+	rKeyClient = 'L44XZCmPPriBYeq5LXj9aVudrNAq5j6gTVDKjpSYaHeAfmj4Lxc5'  # 16SjF7rtkwCET3T8wJV5AUpTLXDMJX12Fa
 
 	# connect
 	conn = JsonConn()
-	conn.connect(('',7878))
+	conn.connect(('',7879))
 
 	# HANDSHAKE
 	uKeyServer = exchangePubKey(privtopub(rKeyClient), conn)
@@ -70,7 +68,7 @@ if __name__ == "__main__":
 	print history(scriptAddr)
 
 	# PAY AS YOU CONSUME
-	paymentSpin(script, conn, rKeyClient, uKeyServer, 20000)
+	paymentSpin(script, conn, rKeyClient, uKeyServer, 1000)
 
 	# close the channel
 	conn.close()

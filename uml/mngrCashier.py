@@ -29,7 +29,7 @@ class connManager(Thread):
 	def controlSpin(self):
 		# testing
 		while True:
-			sleep(4)
+			sleep(2)
 			print 'Current balance: %d' %self.balance
 			print 'Current usage: ',hpUtils.retrieveUsage(self.ipClient)
 			if hpUtils.retrieveUsage(self.ipClient) > self.balance:
@@ -63,7 +63,7 @@ class connManager(Thread):
 		pubKeyServer = bitcoin.privtopub(self.privS)
 		print 'pubKeyServer: ', pubKeyServer
 		self.pubKeyClient = txUtils.exchangePubKey(pubKeyServer, self.c)
-		print '################################# Handshake ####################################'
+		print 30*'#', 'Handshake', 30*'#'
 		print 'Public Key received from client is: ', self.pubKeyClient
 
 		# receive the signed Dtx and
@@ -72,13 +72,11 @@ class connManager(Thread):
 		#print pprint(bitcoin.deserialize(signedDtx))
 		scriptDtx = self.c.jrecv()
 		print 'ScriptDtx: ',  scriptDtx
-		print 'Ownscript: '
 		own = bitcoin.mk_multisig_script([bitcoin.privtopub(self.privS), self.pubKeyClient], 2,2)  # inversion!!!!
-		print own
-		self.c.close()
+		if own != scriptDtx: print 'Anomalous ScriptDtx. Own is:', own
 		# broadcast D
-		#bitcoin.pushtx(signedDtx)
-		print '############################### MPC initialised ################################'
+		bitcoin.pushtx(signedDtx)
+		print 35*'#',' MPC initialised ', 35*'#'
 		self.balance += 1000000
 
 		# authorize use of the internet:
@@ -94,7 +92,7 @@ class connManager(Thread):
 
 		# broadcast payment
 		print 'Manager broadcasts payment'
-		#self.pushPayment()
+		self.pushPayment()
 
 		# terminate cashier
 		print "Manager waiting for cashier's termination"
@@ -111,6 +109,8 @@ class cashier(Thread):
 		self.observers = []
 		self.payment = None
 		self.signature = None
+		self.connLen = 0
+		self.maxConnLen = 50
 
 	def addObserver(self, obs):
 		self.observers.append(obs)
@@ -137,42 +137,38 @@ class cashier(Thread):
 		if payment == None: return False
 		return True
 
-        def run(self):
+	def run(self):
 		print 'Cashier running'
 		self.amount = 0
 		while self.signal:
+			self.c.socket.settimeout(5)
 
 			# reinit payment and sig to 0
 			self.payment = None
 			self.signature = None
 
-			# init the select structure for blocking sockets
-			self.rlist =[]
-			self.wlist =[]
-			self.xlist =[]
-			self.toread=[self.c]
+ 			try:
+				self.payment = self.c.jrecv()
+			except socket.timeout:
+				print 'No payment received'
+			self.c.socket.settimeout(2)
+			if self.payment == 'nil': break
 
-			# use output of select: receive payment
-			# if self.rlist != []: self.payment = self.c.jrecv()
-			self.rlist, self.wlist, self.xlist = select.select(self.toread, [], [], 2)
-			if self.rlist != []:
-				for connection in self.rlist: self.payment = connection.jrecv()
+			try:
+				self.signature = self.c.jrecv()
+			except socket.timeout:
+				print 'No signature received'
+			if self.signature == 'nil': break
 
 			if self.payment != None:
-				print '################################################################################'
+				print '#'*80
 				print 'A transaction template was received:'
-				pprint(self.payment)
+				print(self.payment)
 				#print bitcoin.deserialize(self.payment)
-
-			# receive signature
-			self.toread=[self.c]
-			self.rlist, self.wlist, self.xlist = select.select(self.toread, [], [], 2)
-			if self.rlist != []:
-				for connection in self.rlist: self.signature = connection.jrecv()
 
 			if self.signature != None:
 				print 'Signature:'
-				pprint(self.signature)
+				print(self.signature)
 
 			if self.verifyPayment(self.payment, 12):
 				print 'Verify payment (business logic OK, format OK, crypto OK)'
@@ -190,7 +186,8 @@ class cashier(Thread):
 if __name__ == "__main__":
 
 	serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	port = 7878
+	port = 7879
+
 	serversocket.bind(('', port))
 	serversocket.listen(5)
 
@@ -254,3 +251,60 @@ if __name__ == "__main__":
 # 	def stopDispatching(self):
 # 		print 'Dispatcher was asked to stop'
 # 		self.Signal = False
+
+
+# from socket import error as SocketError
+# import errno
+#
+# try:
+#     response = urllib2.urlopen(request).read()
+# except SocketError as e:
+#     if e.errno != errno.ECONNRESET:
+#         raise # Not error we are looking for
+#     pass # Handle error here.
+
+
+	# def run(self):
+	# 	print 'Cashier running'
+	# 	self.amount = 0
+	# 	while self.signal:
+	#
+	# 		# reinit payment and sig to 0
+	# 		self.payment = None
+	# 		self.signature = None
+	#
+	# 		# init the select structure for blocking sockets
+	# 		self.rlist =[]
+	# 		self.wlist =[]
+	# 		self.xlist =[]
+	# 		self.toread=[self.c]
+	#
+	# 		# use output of select: receive payment
+	# 		# if self.rlist != []: self.payment = self.c.jrecv()
+	# 		self.rlist, self.wlist, self.xlist = select.select(self.toread, [], [], 2)
+	# 		if self.rlist != []:
+	# 			for connection in self.rlist: self.payment = connection.jrecv()
+	#
+	# 		if self.payment != None:
+	# 			print '################################################################################'
+	# 			print 'A transaction template was received:'
+	# 			pprint(self.payment)
+	# 			#print bitcoin.deserialize(self.payment)
+	#
+	# 		# receive signature
+	# 		self.toread=[self.c]
+	# 		self.rlist, self.wlist, self.xlist = select.select(self.toread, [], [], 2)
+	# 		if self.rlist != []:
+	# 			for connection in self.rlist: self.signature = connection.jrecv()
+	#
+	# 		if self.signature != None:
+	# 			print 'Signature:'
+	# 			pprint(self.signature)
+	#
+	# 		if self.verifyPayment(self.payment, 12):
+	# 			print 'Verify payment (business logic OK, format OK, crypto OK)'
+	# 			print "Update client's balance"
+	# 			self.notifyObservers(self.payment, self.signature)
+	# 		sleep(.5)
+	#
+	# 	self.c.close()

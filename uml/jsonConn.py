@@ -5,7 +5,7 @@ class JsonConn(object):
 	client side, incomplete for server side. '''
 
 	def __init__(self,conn=None):
-		if conn == None:  # NOT RECOMMENDED 
+		if conn == None:  # NOT RECOMMENDED
 			self.socket = socket.socket()
 		else:
 			self.socket = conn
@@ -31,6 +31,7 @@ class JsonConn(object):
 
 	def jrecv(self, max=2048):
 		length_str = self.read_n(4)
+		if length_str == 'nil': return 'nil'
 		length = int(length_str)
 		if length > max: return Exception('Data recvd bigga than max')
 		return self.read_n(length)
@@ -41,7 +42,8 @@ class JsonConn(object):
 		while n > 0:
 			data = self.socket.recv(n)
 			if data == '':
-				raise RuntimeError('unexpected connection close')
+				return 'nil'   # is this approach ok?
+			#	raise RuntimeError('unexpected connection close')
 			buf += data
 			n -= len(data)
 		return buf
