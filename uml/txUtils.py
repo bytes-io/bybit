@@ -134,7 +134,7 @@ def makeDtx(rKeyClient, uKeyServer, dep):
 	depositAddr = scriptaddr(script)
 	histDeposit = history(depositAddr)
 	if histDeposit != []:
-		print 'Problem with depositAddr: non-void history.'
+		print 'Issue with depositAddr: non-void history.'
 
 	# Prepare the DEPOSIT transaction
 	outs = [{'value':dep, 'address':depositAddr}]

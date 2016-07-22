@@ -49,8 +49,12 @@ class connManager(Thread):
 		self.lastpayment  = payment
 		self.lastsig = signature
 
+	def notifyConnState(self, OnOff):
+		if OnOff == False: print 'Manager was notified that connection with client ended.'
+
 	def pushPayment(self):
-		compliantScript = bitcoin.mk_multisig_script([bitcoin.privtopub(self.privS), self.pubKeyClient], 2,2)  # inversion!!!!
+		#compliantScript = bitcoin.mk_multisig_script([bitcoin.privtopub(self.privS), self.pubKeyClient], 2,2)  # inversion!!!!
+		compliantScript = bitcoin.mk_multisig_script([self.pubKeyClient, bitcoin.privtopub(self.privS)], 2,2)
 		sigServer = bitcoin.multisign(self.lastpayment, 0, compliantScript, self.privS)
 		signedPtx = bitcoin.apply_multisignatures(self.lastpayment, 0, compliantScript, [self.lastsig, sigServer])
 		print 'Broadcast the very last payment. Just got richer. Tx hash:', bitcoin.txhash(signedPtx)
@@ -72,7 +76,7 @@ class connManager(Thread):
 		#print pprint(bitcoin.deserialize(signedDtx))
 		scriptDtx = self.c.jrecv()
 		print 'ScriptDtx: ',  scriptDtx
-		own = bitcoin.mk_multisig_script([bitcoin.privtopub(self.privS), self.pubKeyClient], 2,2)  # inversion!!!!
+		own = bitcoin.mk_multisig_script([self.pubKeyClient, bitcoin.privtopub(self.privS)], 2,2)  # inversion!!!!
 		if own != scriptDtx: print 'Anomalous ScriptDtx. Own is:', own
 		# broadcast D
 		bitcoin.pushtx(signedDtx)
@@ -109,18 +113,20 @@ class cashier(Thread):
 		self.observers = []
 		self.payment = None
 		self.signature = None
-		self.connLen = 0
-		self.maxConnLen = 50
 
 	def addObserver(self, obs):
 		self.observers.append(obs)
 
+	def notifyConnEnd(self):
+		for obs in self.observers: obs.notifyConnState(False)
+
 	def extractAmount(self, payment):
-		#d = bitcoin.deserialize(payment)
+		d = bitcoin.deserialize(payment)
 		return d['outs'][0]['value']
 
 	def notifyObservers(self, payment, signature):
-		#amnt = extractAmount(payment)
+		amnt = self.extractAmount(payment)
+		print 'Amount received from client so far: ', amnt
 		#for obs in self.observers:obs.balance +=50000
 		for obs in self.observers: obs.notify(payment, signature)
 
