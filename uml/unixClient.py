@@ -16,7 +16,7 @@ def paymentSpin(redeemScript, conn, privkeyC, pubkeyS, increment):
 	i = 0
 	print 'inpaymentspin'
 	while i<10:
-		print 'Spinning'
+		print 'Paid so far: ', amount
 		amount += increment
 		i+=1
 		# make a payment transaction with amount += increment
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 		host = '192.168.12.1'
 
 	# private key of client
-	rKeyClient = 'L44XZCmPPriBYeq5LXj9aVudrNAq5j6gTVDKjpSYaHeAfmj4Lxc5'  # 16SjF7rtkwCET3T8wJV5AUpTLXDMJX12Fa
+	rKeyClient = 'KyLuCNsxddnqpdJW1Q3q2mQtkssThJUfcGq9hdCE8W72xYPD3He3'  # 1CA1rufdFggCkd4kZQaff6NxZa1P9AfrrE
 
 	# connect
 	conn = JsonConn()
